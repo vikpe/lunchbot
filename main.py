@@ -42,6 +42,8 @@ class MyClient(discord.Client):
 :office: Collegium
 :cityscape: LPS
 :grey_question:  Annat, kommentera!""")
+            else:
+                message.author.send("DOOF! Lunchvote redan uppe.")
 
 
 client = MyClient()
