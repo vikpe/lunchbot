@@ -43,7 +43,7 @@ class MyClient(discord.Client):
 :cityscape: LPS
 :grey_question:  Annat, kommentera!""")
             else:
-                message.author.send("DOOF! Lunchvote redan uppe.")
+                await message.author.send("DOOF! Lunchvote redan uppe.")
 
 
 client = MyClient()
