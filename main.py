@@ -26,7 +26,7 @@ class MyClient(discord.Client):
     async def on_message(self, message):
         if message.content.startswith('!lunch'):
             time_delta = datetime.datetime.now() - self.last_lunch_message_sent
-            if time_delta.seconds >= 12 * 60 * 60:
+            if time_delta.days > 0 or time_delta.seconds >= 12 * 60 * 60:
                 self.last_lunch_message_sent = datetime.datetime.now()
                 channel = self.get_channel(540608386299985940)
                 await channel.send("""
