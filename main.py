@@ -61,7 +61,7 @@ class MyClient(discord.Client):
         while not self.is_closed():
             # check if it's time to send the voting message
             if datetime.datetime.now().weekday() < 8: # and datetime.datetime.now().hour == 9:
-                self.send_lunch_message()
+                await self.send_lunch_message()
 
             await asyncio.sleep(60) # task runs every 60 seconds
 
