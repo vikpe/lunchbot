@@ -51,15 +51,16 @@ class MyClient(discord.Client):
             else:
                 await message.author.send("DOOF! Lunchvote redan uppe.")
 
-    def send_lunch_message(self):
-        #do stuff
+    async def send_lunch_message(self):
+        channel = self.get_channel(540608386299985940)
+        await channel.send("Hello :)")
 
     async def background_task(self):
         await self.wait_until_ready()
 
         while not self.is_closed():
             # check if it's time to send the voting message
-            if datetime.datetime.now().weekday() < 6 and datetime.datetime.now().hour == 9:
+            if datetime.datetime.now().weekday() < 8: # and datetime.datetime.now().hour == 9:
                 self.send_lunch_message()
 
             await asyncio.sleep(60) # task runs every 60 seconds
