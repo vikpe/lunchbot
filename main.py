@@ -15,6 +15,12 @@ logger.addHandler(handler)
 
 class MyClient(discord.Client):
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # create the background task and run it in the background
+        self.bg_task = self.loop.create_task(self.background_task())
+
     async def on_ready(self):
         print('Logged in as')
         print(self.user.name)
@@ -45,6 +51,18 @@ class MyClient(discord.Client):
             else:
                 await message.author.send("DOOF! Lunchvote redan uppe.")
 
+    def send_lunch_message(self):
+        #do stuff
+
+    async def background_task(self):
+        await self.wait_until_ready()
+
+        while not self.is_closed():
+            # check if it's time to send the voting message
+            if datetime.datetime.now().weekday() < 6 and datetime.datetime.now().hour == 9:
+                self.send_lunch_message()
+
+            await asyncio.sleep(60) # task runs every 60 seconds
 
 client = MyClient()
 api_token = os.getenv("LUNCHBOT_TOKEN")
