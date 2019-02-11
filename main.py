@@ -39,18 +39,18 @@ class MyClient(discord.Client):
             self.last_lunch_message_sent = datetime.datetime.now()
             channel = self.get_channel(540608386299985940)
             await channel.send("""
-        :white_check_mark: Ja
-        :no_entry: Nej
-        <:mk:541268624392978442> Matkultur
-        :hot_pepper: Chili & Lime
-        :pizza: La Fontana 
-        :house: Husman
-        :sushi: Yatai
-        :green_salad: Brödernas
-        :golf: Golfen
-        :office: Collegium
-        :cityscape: LPS
-        :grey_question:  Annat, kommentera!""")
+:white_check_mark: Ja
+:no_entry: Nej
+<:mk:541268624392978442> Matkultur
+:hot_pepper: Chili & Lime
+:pizza: La Fontana 
+:house: Husman
+:sushi: Yatai
+:green_salad: Brödernas
+:golf: Golfen
+:office: Collegium
+:cityscape: LPS
+:grey_question:  Annat, kommentera!""")
         else:
             await message.author.send("DOOF! Lunchvote redan uppe.")
 
