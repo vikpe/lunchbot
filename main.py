@@ -58,11 +58,6 @@ class MyClient(discord.Client):
         await self.wait_until_ready()
 
         while not self.is_closed():
-            # debug in production!
-            channel = self.get_channel(540608386299985940)
-
-            await channel.send(datetime.datetime.now().weekday())
-            await channel.send(datetime.datetime.now().hour)
             # check if it's time to send the voting message
             if datetime.datetime.now().weekday() < 6 and datetime.datetime.now().hour == 8:
                 await self.send_lunch_message()
