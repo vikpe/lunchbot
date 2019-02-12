@@ -61,10 +61,10 @@ class MyClient(discord.Client):
             # debug in production!
             channel = self.get_channel(540608386299985940)
 
-            await channel.send(datetime.datetime.now().weekday)
+            await channel.send(datetime.datetime.now().weekday())
             await channel.send(datetime.datetime.now().hour)
             # check if it's time to send the voting message
-            if datetime.datetime.now().weekday < 6 and datetime.datetime.now().hour == 8:
+            if datetime.datetime.now().weekday() < 6 and datetime.datetime.now().hour == 8:
                 await self.send_lunch_message()
 
             await asyncio.sleep(60) # task runs every 60 seconds
