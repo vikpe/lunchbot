@@ -31,9 +31,9 @@ class MyClient(discord.Client):
 
     async def on_message(self, message):
         if message.content.startswith('!lunch'):
-            await self.send_lunch_message()
+            await self.send_lunch_message(message)
 
-    async def send_lunch_message(self):
+    async def send_lunch_message(self, message=None):
         time_delta = datetime.datetime.now() - self.last_lunch_message_sent
         if time_delta.days > 0 or time_delta.seconds >= 12 * 60 * 60:
             self.last_lunch_message_sent = datetime.datetime.now()
@@ -51,7 +51,7 @@ class MyClient(discord.Client):
 :office: Collegium
 :cityscape: LPS
 :grey_question:  Annat, kommentera!""")
-        else:
+        elif message:
             await message.author.send("DOOF! Lunchvote redan uppe.")
 
     async def background_task(self):
