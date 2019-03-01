@@ -30,7 +30,7 @@ class MyClient(discord.Client):
         with open('config.json') as json_data_file:
             self.config_data = json.load(json_data_file)
         for option in self.config_data["options"]:
-            self.lunch_message = [option]["emoji"] + " " + [option]["votingOption"] + "\n"
+            self.lunch_message = [option]['emoji'] + " " + [option]['votingOption'] + "\n"
         print(self.config_data)
         print(self.lunch_message)
 
