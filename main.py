@@ -19,6 +19,7 @@ class MyClient(discord.Client):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
+        # init stuff
         self.lunch_message = ""
         self.last_lunch_message_sent = ""
         self.config_data = ""
@@ -30,7 +31,7 @@ class MyClient(discord.Client):
         with open('config.json') as json_data_file:
             self.config_data = json.load(json_data_file)
         for option in self.config_data['options']:
-            self.lunch_message = [option]['emoji'] + " " + [option]['votingOption'] + "\n"
+            self.lunch_message = self.config_data[option]['emoji'] + " " + self.config_data[option]['votingOption'] + "\n"
         print(self.config_data)
         print(self.lunch_message)
 
