@@ -32,6 +32,8 @@ class MyClient(discord.Client):
         for option in self.config_data["options"]:
             self.lunch_message = self.config_data["options"][option]["emoji"] + " " + \
                                  self.config_data["options"][option]["votingOption"] + "\n"
+        print(self.config_data)
+        print(self.lunch_message)
 
     async def write_config(self):
         with open('config.json', 'w') as outfile:
@@ -49,7 +51,7 @@ class MyClient(discord.Client):
     async def on_message(self, message):
         if message.content.startswith('!lunch'):
             await self.send_lunch_message(message)
-        if message.content.startswith('!testlunch'):
+        elif message.content.startswith('!testlunch'):
             await self.send_test_message(message)
 
     async def send_lunch_message(self, message=None):
