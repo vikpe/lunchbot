@@ -55,9 +55,9 @@ class MyClient(discord.Client):
             await self.send_test_message(message)
 
     async def send_lunch_message(self, message=None):
-        time_delta = datetime.datetime.now() - self.last_lunch_message_sent
+        time_delta = datetime.datetime.now(gettz("Europe/Stockholm")) - self.last_lunch_message_sent
         if time_delta.days > 0 or time_delta.seconds >= 12 * 60 * 60:
-            self.last_lunch_message_sent = datetime.datetime.now()
+            self.last_lunch_message_sent = datetime.datetime.now(gettz("Europe/Stockholm"))
             channel = self.get_channel(540608386299985940)
             await channel.send(self.lunch_message)
         elif message:
@@ -71,7 +71,7 @@ class MyClient(discord.Client):
 
         while not self.is_closed():
             # check if it's time to send the voting message
-            if datetime.datetime.now().weekday() < 5 and datetime.datetime.now().hour == 8:
+            if datetime.datetime.now(gettz("Europe/Stockholm")).weekday() < 5 and datetime.datetime.now(gettz("Europe/Stockholm")).hour == 9:
                 await self.send_lunch_message()
 
             await asyncio.sleep(60)  # task runs every 60 seconds
