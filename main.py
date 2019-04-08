@@ -3,7 +3,7 @@ import discord
 import asyncio
 import logging
 import datetime
-from dateutil import tz
+import dateutil 
 import json
 
 logger = logging.getLogger('discord')
@@ -56,9 +56,9 @@ class MyClient(discord.Client):
             await self.send_test_message(message)
 
     async def send_lunch_message(self, message=None):
-        time_delta = datetime.datetime.now(tz.gettz("Europe/Stockholm")) - self.last_lunch_message_sent
+        time_delta = datetime.datetime.now(dateutil.tz.gettz("Europe/Stockholm")) - self.last_lunch_message_sent
         if time_delta.days > 0 or time_delta.seconds >= 12 * 60 * 60:
-            self.last_lunch_message_sent = datetime.datetime.now(tz.gettz("Europe/Stockholm"))
+            self.last_lunch_message_sent = datetime.datetime.now(dateutil.tz.gettz("Europe/Stockholm"))
             channel = self.get_channel(540608386299985940)
             await channel.send(self.lunch_message)
         elif message:
@@ -72,7 +72,7 @@ class MyClient(discord.Client):
 
         while not self.is_closed():
             # check if it's time to send the voting message
-            if datetime.datetime.now(tz.gettz("Europe/Stockholm")).weekday() < 5 and datetime.datetime.now(tz.gettz("Europe/Stockholm")).hour == 9:
+            if datetime.datetime.now(dateutil.tz.gettz("Europe/Stockholm")).weekday() < 5 and datetime.datetime.now(dateutil.tz.gettz("Europe/Stockholm")).hour == 9:
                 await self.send_lunch_message()
 
             await asyncio.sleep(60)  # task runs every 60 seconds
