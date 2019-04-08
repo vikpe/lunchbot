@@ -3,7 +3,7 @@ import discord
 import asyncio
 import logging
 import datetime
-import dateutil 
+import dateutil.tz 
 import json
 
 logger = logging.getLogger('discord')
