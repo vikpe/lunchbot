@@ -23,7 +23,7 @@ class MyClient(discord.Client):
         # init stuff
         self.lunch_message = ""
         self.config_data = ""
-        self.timezone = tzinfo = self.timezone
+        self.timezone = tz.gettz("Europe/Stockholm")
 
         # create the background task and run it in the background
         self.bg_task = self.loop.create_task(self.background_task())
