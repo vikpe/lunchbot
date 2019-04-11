@@ -22,8 +22,8 @@ class MyClient(discord.Client):
 
         # init stuff
         self.lunch_message = ""
-        self.last_lunch_message_sent = ""
         self.config_data = ""
+        self.timezone = tzinfo = self.timezone
 
         # create the background task and run it in the background
         self.bg_task = self.loop.create_task(self.background_task())
@@ -32,7 +32,8 @@ class MyClient(discord.Client):
         with open('config.json') as json_data_file:
             self.config_data = json.load(json_data_file)
         for option in self.config_data["options"]:
-            self.lunch_message += option["emoji"] + " " + option["votingOption"] + "\n"
+            self.lunch_message += option["emoji"] + \
+                " " + option["votingOption"] + "\n"
         print(self.config_data)
         print(self.lunch_message)
 
@@ -56,9 +57,11 @@ class MyClient(discord.Client):
             await self.send_test_message(message)
 
     async def send_lunch_message(self, message=None):
-        time_delta = datetime.datetime.now(tz.gettz("Europe/Stockholm")) - self.last_lunch_message_sent
+        time_delta = datetime.datetime.now(
+            tzinfo=self.timezone) - self.last_lunch_message_sent
         if time_delta.days > 0 or time_delta.seconds >= 12 * 60 * 60:
-            self.last_lunch_message_sent = datetime.datetime.now(tz.gettz("Europe/Stockholm"))
+            self.last_lunch_message_sent = datetime.datetime.now(
+                tzinfo=self.timezone)
             channel = self.get_channel(540608386299985940)
             await channel.send(self.lunch_message)
         elif message:
@@ -72,7 +75,7 @@ class MyClient(discord.Client):
 
         while not self.is_closed():
             # check if it's time to send the voting message
-            if datetime.datetime.now(tz.gettz("Europe/Stockholm")).weekday() < 5 and datetime.datetime.now(tz.gettz("Europe/Stockholm")).hour == 9:
+            if datetime.datetime.now(tzinfo=self.timezone).weekday() < 5 and datetime.datetime.now(tzinfo=self.timezone).hour == 9:
                 await self.send_lunch_message()
 
             await asyncio.sleep(60)  # task runs every 60 seconds
