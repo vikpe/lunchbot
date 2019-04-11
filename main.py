@@ -48,7 +48,7 @@ class MyClient(discord.Client):
         print(self.user.name)
         print(self.user.id)
         print('------')
-        self.last_lunch_message_sent = self.datetime(datetime.MINYEAR, 1, 1, 0, 0)
+        self.last_lunch_message_sent = datetime.datetime(datetime.MINYEAR, 1, 1, 0, 0)
 
     async def on_message(self, message):
         if message.content.startswith('!lunch'):
