@@ -23,7 +23,8 @@ class MyClient(discord.Client):
         # init stuff
         self.lunch_message = ""
         self.config_data = ""
-        self.timezone = tz.gettz("Europe/Stockholm")
+        #self.timezone = tz.gettz("Europe/Stockholm")
+        self.datetime = datetime.datetime(datetime.MINYEAR, 1, 1, 0, 0, tzinfo=tz.gettz("Europe/Stockholm"))
 
         # create the background task and run it in the background
         self.bg_task = self.loop.create_task(self.background_task())
@@ -47,8 +48,7 @@ class MyClient(discord.Client):
         print(self.user.name)
         print(self.user.id)
         print('------')
-        self.last_lunch_message_sent = datetime.datetime(
-            datetime.MINYEAR, 1, 1, 0, 0)
+        self.last_lunch_message_sent = self.datetime(datetime.MINYEAR, 1, 1, 0, 0)
 
     async def on_message(self, message):
         if message.content.startswith('!lunch'):
@@ -57,11 +57,9 @@ class MyClient(discord.Client):
             await self.send_test_message(message)
 
     async def send_lunch_message(self, message=None):
-        time_delta = datetime.datetime.now(
-            tzinfo=self.timezone) - self.last_lunch_message_sent
+        time_delta = self.datetime.now() - self.last_lunch_message_sent
         if time_delta.days > 0 or time_delta.seconds >= 12 * 60 * 60:
-            self.last_lunch_message_sent = datetime.datetime.now(
-                tzinfo=self.timezone)
+            self.last_lunch_message_sent = self.datetime.now()
             channel = self.get_channel(540608386299985940)
             await channel.send(self.lunch_message)
         elif message:
@@ -75,7 +73,7 @@ class MyClient(discord.Client):
 
         while not self.is_closed():
             # check if it's time to send the voting message
-            if datetime.datetime.now(tzinfo=self.timezone).weekday() < 5 and datetime.datetime.now(tzinfo=self.timezone).hour == 9:
+            if self.datetime.now().weekday() < 5 and self.datetime.now().hour == 9:
                 await self.send_lunch_message()
 
             await asyncio.sleep(60)  # task runs every 60 seconds
