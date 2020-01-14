@@ -49,8 +49,12 @@
       "votingOption": "LPS"
     },
     {
-      "emoji": ":grey_question:",
+      "emoji": ":new:",
       "votingOption": "Annat, kommentera!"
+    },
+    {
+      "emoji": ":books:",
+      "votingOption": "Jag kan boka"
     }
   ]
 }
