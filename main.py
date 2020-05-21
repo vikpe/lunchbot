@@ -73,7 +73,7 @@ class MyClient(discord.Client):
         await message.author.send(self.lunch_message)
 
     async def set_announcements(self, message):
-        self.announcements = !announcements
+        self.announcements = not self.announcements
         await message.author.send("Announcements set to" self.announcements)
 
     async def background_task(self):
