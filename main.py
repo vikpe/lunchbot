@@ -23,6 +23,7 @@ class MyClient(discord.Client):
         # init stuff
         self.lunch_message = ""
         self.config_data = ""
+        self.announcements = True
         #self.timezone = tz.gettz("Europe/Stockholm")
         self.datetime = datetime.datetime(datetime.MINYEAR, 1, 1, 0, 0, tzinfo=tz.gettz("Europe/Stockholm"))
 
@@ -55,18 +56,25 @@ class MyClient(discord.Client):
             await self.send_lunch_message(message)
         elif message.content.startswith('!testlunch'):
             await self.send_test_message(message)
+        elif message.content.startswith('!announcements'):
+            await self.set_announcements(message)
 
     async def send_lunch_message(self, message=None):
         time_delta = self.datetime.now() - self.last_lunch_message_sent
         if time_delta.days > 0 or time_delta.seconds >= 12 * 60 * 60:
             self.last_lunch_message_sent = self.datetime.now()
             channel = self.get_channel(540608386299985940)
-            await channel.send(self.lunch_message)
+            if announcements:
+                await channel.send(self.lunch_message)
         elif message:
             await message.author.send("DOOF! Lunchvote redan uppe.")
 
     async def send_test_message(self, message=None):
         await message.author.send(self.lunch_message)
+
+    async def set_announcements(self, message):
+        self.announcements = !announcements
+        await message.author.send("Announcements set to" self.announcements)
 
     async def background_task(self):
         await self.wait_until_ready()
