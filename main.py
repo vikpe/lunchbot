@@ -64,7 +64,7 @@ class MyClient(discord.Client):
         if time_delta.days > 0 or time_delta.seconds >= 12 * 60 * 60:
             self.last_lunch_message_sent = self.datetime.now()
             channel = self.get_channel(540608386299985940)
-            if announcements:
+            if self.announcements:
                 await channel.send(self.lunch_message)
         elif message:
             await message.author.send("DOOF! Lunchvote redan uppe.")
@@ -74,7 +74,7 @@ class MyClient(discord.Client):
 
     async def set_announcements(self, message):
         self.announcements = not self.announcements
-        await message.author.send("Announcements set to" + self.announcements)
+        await message.author.send("Announcements set to" + str(self.announcements))
 
     async def background_task(self):
         await self.wait_until_ready()
