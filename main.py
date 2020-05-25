@@ -31,6 +31,7 @@ class MyClient(discord.Client):
         self.bg_task = self.loop.create_task(self.background_task())
 
     async def read_config(self):
+        self.lunch_message = ""
         with open('config.json') as json_data_file:
             self.config_data = json.load(json_data_file)
         for option in self.config_data["options"]:
