@@ -43,7 +43,7 @@ class MyClient(discord.Client):
         print(self.announcements)
 
     async def write_config(self):
-        self.config_data["announcements"] = self.announcements 
+        self.config_data['announcements'] = self.announcements
         with open('config.json', 'w') as outfile:
             json.dump(self.config_data, outfile)
 
