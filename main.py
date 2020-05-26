@@ -37,7 +37,7 @@ class MyClient(discord.Client):
         for option in self.config_data["options"]:
             self.lunch_message += option["emoji"] + \
                 " " + option["votingOption"] + "\n"
-        self.announcements = self.config_data["announcements"]
+        self.announcements = self.config_data['announcements']
         print(self.config_data)
         print(self.lunch_message)
         print(self.announcements)
