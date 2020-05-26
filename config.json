@@ -56,5 +56,6 @@
       "emoji": ":books:",
       "votingOption": "Jag kan boka"
     }
-  ]
+  ],
+  "announcements": True
 }
