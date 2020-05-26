@@ -78,7 +78,7 @@ class MyClient(discord.Client):
 
     async def set_announcements(self, message):
         self.announcements = not self.announcements
-        await.self.write_config()
+        await self.write_config()
         await message.author.send("Announcements set to " + str(self.announcements))
 
     async def background_task(self):
