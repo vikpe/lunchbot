@@ -23,7 +23,7 @@ class MyClient(discord.Client):
         # init stuff
         self.lunch_message = ""
         self.config_data = ""
-        self.announcements = True
+        self.announcements = ""
         #self.timezone = tz.gettz("Europe/Stockholm")
         self.datetime = datetime.datetime(datetime.MINYEAR, 1, 1, 0, 0, tzinfo=tz.gettz("Europe/Stockholm"))
 
@@ -37,12 +37,15 @@ class MyClient(discord.Client):
         for option in self.config_data["options"]:
             self.lunch_message += option["emoji"] + \
                 " " + option["votingOption"] + "\n"
+        self.announcements = self.config_data["announcements"]
         print(self.config_data)
         print(self.lunch_message)
+        print(self.announcements)
 
     async def write_config(self):
+        self.config_data["announcements"] = self.announcements 
         with open('config.json', 'w') as outfile:
-            json.dump(self.confg_data, outfile)
+            json.dump(self.config_data, outfile)
 
     async def on_ready(self):
         await self.read_config()
@@ -75,6 +78,7 @@ class MyClient(discord.Client):
 
     async def set_announcements(self, message):
         self.announcements = not self.announcements
+        await.self.write_config()
         await message.author.send("Announcements set to " + str(self.announcements))
 
     async def background_task(self):
