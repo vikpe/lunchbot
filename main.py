@@ -44,8 +44,11 @@ class MyClient(discord.Client):
 
     async def write_config(self):
         self.config_data['announcements'] = self.announcements
+        print('Writing config data')
+        print(self.config_data)
         with open('config.json', 'w') as outfile:
             json.dump(self.config_data, outfile)
+        print('Done')
 
     async def on_ready(self):
         await self.read_config()
