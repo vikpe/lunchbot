@@ -117,7 +117,7 @@ class MyClient(discord.Client):
         await message.channel.send(random.choice(self.ow_support))
 
     async def send_ow_message(self, message):
-		all_heroes = self.ow_tanks + self.ow_damage + self.ow_support
+        all_heroes = self.ow_tanks + self.ow_damage + self.ow_support
         await message.channel.send(random.choice(all_heroes))
 
     async def background_task(self):
