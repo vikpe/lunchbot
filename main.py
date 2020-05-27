@@ -106,14 +106,17 @@ class MyClient(discord.Client):
         await self.write_config()
         await message.author.send("Announcements set to " + str(self.announcements))
 
-    async def send_owtank_message(self, message)
+    async def send_owtank_message(self, message):
         await message.channel.send("Reinhardt")
    
-    async def send_owdamage_message(self, message)
+    async def send_owdamage_message(self, message):
         await message.channel.send("Pharah)
    
-    async def send_owsupport_message(self, message)
+    async def send_owsupport_message(self, message):
         await message.channel.send("Ana")
+
+    async def send_ow_message(self, message):
+        await message.channel.send("Echo")
 
     async def background_task(self):
         await self.wait_until_ready()
