@@ -3,6 +3,7 @@ import discord
 import asyncio
 import logging
 import datetime
+import random
 from dateutil import tz
 import json
 
@@ -107,16 +108,17 @@ class MyClient(discord.Client):
         await message.author.send("Announcements set to " + str(self.announcements))
 
     async def send_owtank_message(self, message):
-        await message.channel.send("Reinhardt")
+        await message.channel.send(random.choice(self.ow_tanks))
    
     async def send_owdamage_message(self, message):
-        await message.channel.send("Pharah")
+        await message.channel.send(random.choice(self.ow_damage))
    
     async def send_owsupport_message(self, message):
-        await message.channel.send("Ana")
+        await message.channel.send(random.choice(self.ow_support))
 
     async def send_ow_message(self, message):
-        await message.channel.send("Echo")
+		all_heroes = self.ow_tanks + self.ow_damage + self.ow_support
+        await message.channel.send(random.choice(all_heroes))
 
     async def background_task(self):
         await self.wait_until_ready()
