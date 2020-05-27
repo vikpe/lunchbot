@@ -23,6 +23,9 @@ class MyClient(discord.Client):
         # init stuff
         self.lunch_message = ""
         self.config_data = ""
+		self.ow_tanks = ""
+		self.ow_damage = ""
+		self.ow_support = ""
         self.announcements = ""
         #self.timezone = tz.gettz("Europe/Stockholm")
         self.datetime = datetime.datetime(datetime.MINYEAR, 1, 1, 0, 0, tzinfo=tz.gettz("Europe/Stockholm"))
@@ -34,12 +37,23 @@ class MyClient(discord.Client):
         self.lunch_message = ""
         with open('config.json') as json_data_file:
             self.config_data = json.load(json_data_file)
+		# read lunch options
         for option in self.config_data["options"]:
             self.lunch_message += option["emoji"] + \
                 " " + option["votingOption"] + "\n"
+		# read ow characters
+		self.ow_tanks = self.config_data['owTanks']
+		self.ow_damage = self.config_data['owDamage']
+		self.ow_support = self.config_data['owSupport']
+
+		# read announcement status
         self.announcements = self.config_data['announcements']
+
         print(self.config_data)
         print(self.lunch_message)
+		print(self.ow_tanks)
+		print(self.ow_damage)
+		print(self.ow_support)
         print(self.announcements)
 
     async def write_config(self):
@@ -65,6 +79,14 @@ class MyClient(discord.Client):
             await self.send_test_message(message)
         elif message.content.startswith('!announcements'):
             await self.set_announcements(message)
+        elif message.content.startswith('!owtank'):
+            await self.send_owtank_message(message)
+        elif message.content.startswith('!owdps'):
+            await self.send_owdamage_message(message)
+        elif message.content.startswith('!owheal'):
+            await self.send_owsupport_message(message)
+        elif message.content.startswith('!ow'):
+            await self.send_ow_message(message)
 
     async def send_lunch_message(self, message=None):
         time_delta = self.datetime.now() - self.last_lunch_message_sent
@@ -83,6 +105,15 @@ class MyClient(discord.Client):
         self.announcements = not self.announcements
         await self.write_config()
         await message.author.send("Announcements set to " + str(self.announcements))
+
+	async def send_owtank_message(self, message)
+		await message.channel.send("Reinhardt")
+	
+	async def send_owdamage_message(self, message)
+		await message.channel.send("Pharah)
+	
+	async def send_owsupport_message(self, message)
+		await message.channel.send("Ana")
 
     async def background_task(self):
         await self.wait_until_ready()
