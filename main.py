@@ -23,6 +23,9 @@ class MyClient(discord.Client):
         # init stuff
         self.lunch_message = ""
         self.config_data = ""
+		self.ow_tanks = ""
+		self.ow_damage = ""
+		self.ow_support = ""
         self.announcements = ""
         #self.timezone = tz.gettz("Europe/Stockholm")
         self.datetime = datetime.datetime(datetime.MINYEAR, 1, 1, 0, 0, tzinfo=tz.gettz("Europe/Stockholm"))
@@ -34,12 +37,23 @@ class MyClient(discord.Client):
         self.lunch_message = ""
         with open('config.json') as json_data_file:
             self.config_data = json.load(json_data_file)
+		# read lunch options
         for option in self.config_data["options"]:
             self.lunch_message += option["emoji"] + \
                 " " + option["votingOption"] + "\n"
+		# read ow characters
+		self.ow_tanks = self.config_data['owTanks']
+		self.ow_damage = self.config_data['owDamage']
+		self.ow_support = self.config_data['owSupport']
+
+		# read announcement status
         self.announcements = self.config_data['announcements']
+
         print(self.config_data)
         print(self.lunch_message)
+		print(self.ow_tanks)
+		print(self.ow_damage)
+		print(self.ow_support)
         print(self.announcements)
 
     async def write_config(self):

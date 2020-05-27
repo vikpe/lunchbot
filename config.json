@@ -57,5 +57,8 @@
       "votingOption": "Jag kan boka"
     }
   ],
+  "owTanks": [ "D.Va", "Orisa", "Reinhardt", "Roadhog", "Sigma", "Winston", "Wrecking Ball", "Zarya" ],
+  "owDamage": [ "Ashe", "Bastion", "Doomfist", "Echo", "Genji", "Hanzo", "Junkrat", "McCree", "Mei", "Pharah", "Reaper", "Soldier: 76", "Sombra", "Symmetra", "Torbjörn", "Tracer", "Widowmaker" ],
+  "owSupport": [ "Ana", "Baptiste", "Brigitte", "Lúcio", "Mercy", "Moira", "Zenyatta" ],
   "announcements": true
 }
