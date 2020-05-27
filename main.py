@@ -110,7 +110,7 @@ class MyClient(discord.Client):
         await message.channel.send("Reinhardt")
    
     async def send_owdamage_message(self, message):
-        await message.channel.send("Pharah)
+        await message.channel.send("Pharah")
    
     async def send_owsupport_message(self, message):
         await message.channel.send("Ana")
