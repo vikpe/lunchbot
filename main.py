@@ -79,6 +79,14 @@ class MyClient(discord.Client):
             await self.send_test_message(message)
         elif message.content.startswith('!announcements'):
             await self.set_announcements(message)
+        elif message.content.startswith('!owtank'):
+            await self.send_owtank_message(message)
+        elif message.content.startswith('!owdps'):
+            await self.send_owdamage_message(message)
+        elif message.content.startswith('!owheal'):
+            await self.send_owsupport_message(message)
+        elif message.content.startswith('!ow'):
+            await self.send_ow_message(message)
 
     async def send_lunch_message(self, message=None):
         time_delta = self.datetime.now() - self.last_lunch_message_sent
@@ -97,6 +105,15 @@ class MyClient(discord.Client):
         self.announcements = not self.announcements
         await self.write_config()
         await message.author.send("Announcements set to " + str(self.announcements))
+
+	async def send_owtank_message(self, message)
+		await message.channel.send("Reinhardt")
+	
+	async def send_owdamage_message(self, message)
+		await message.channel.send("Pharah)
+	
+	async def send_owsupport_message(self, message)
+		await message.channel.send("Ana")
 
     async def background_task(self):
         await self.wait_until_ready()
