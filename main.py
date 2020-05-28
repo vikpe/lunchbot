@@ -74,19 +74,21 @@ class MyClient(discord.Client):
         self.last_lunch_message_sent = datetime.datetime(datetime.MINYEAR, 1, 1, 0, 0)
 
     async def on_message(self, message):
-        if message.content.startswith('!lunch'):
+        if message.content == '!lunch':
             await self.send_lunch_message(message)
-        elif message.content.startswith('!testlunch'):
+        elif message.content == '!testlunch':
             await self.send_test_message(message)
-        elif message.content.startswith('!announcements'):
+        elif message.content == '!announcements':
             await self.set_announcements(message)
-        elif message.content.startswith('!owtank'):
+        elif message.content == '!owtank':
             await self.send_owtank_message(message)
-        elif message.content.startswith('!owdps'):
+        elif message.content == '!owdps':
             await self.send_owdamage_message(message)
-        elif message.content.startswith('!owheal'):
+        elif message.content == '!owheal':
             await self.send_owsupport_message(message)
-        elif message.content.startswith('!ow'):
+        elif message.content == '!owsupport':
+            await self.send_owsupport_message(message)
+        elif message.content == '!ow':
             await self.send_ow_message(message)
 
     async def send_lunch_message(self, message=None):
