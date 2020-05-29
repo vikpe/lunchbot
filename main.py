@@ -104,7 +104,7 @@ class MyClient(discord.Client):
 
     async def set_announcements(self, message):
         self.announcements = not self.announcements
-        os.putenv("ANNOUNCEMENTS", self.announcements)
+        os.putenv("ANNOUNCEMENTS", str(self.announcements))
         await message.author.send("Announcements set to " + str(self.announcements))
 
     async def send_owtank_message(self, message):
