@@ -32,17 +32,19 @@ class MyClient(discord.Client):
         #self.timezone = tz.gettz("Europe/Stockholm")
         self.datetime = datetime.datetime(datetime.MINYEAR, 1, 1, 0, 0, tzinfo=tz.gettz("Europe/Stockholm"))
 
-        # create the background task and run it in the background
+        # create the background task and run it
         self.bg_task = self.loop.create_task(self.background_task())
 
     async def read_config(self):
         self.lunch_message = ""
         with open('config.json') as json_data_file:
             self.config_data = json.load(json_data_file)
+
         # read lunch options
         for option in self.config_data["options"]:
             self.lunch_message += option["emoji"] + \
                 " " + option["votingOption"] + "\n"
+
         # read ow characters
         self.ow_tanks = self.config_data['owTanks']
         self.ow_damage = self.config_data['owDamage']
@@ -67,6 +69,7 @@ class MyClient(discord.Client):
         print('Logged in as')
         print(self.user.name)
         print(self.user.id)
+        print('Announcments are ' + str(self.announcements))
         print('------')
 
     async def on_message(self, message):
@@ -75,7 +78,7 @@ class MyClient(discord.Client):
         elif message.content == '!testlunch':
             await self.send_test_message(message)
         elif message.content == '!announcements':
-            await self.set_announcements(message)
+            await self.get_announcements(message)
         elif message.content == '!owtank':
             await self.send_owtank_message(message)
         elif message.content == '!owdps':
@@ -99,12 +102,10 @@ class MyClient(discord.Client):
     async def send_test_message(self, message=None):
         await message.author.send(self.lunch_message)
 
-    # Writing of Heroku config vars does not work, this method does not do anything
-    # To change announcements, update config var in browser or cli
-    async def set_announcements(self, message):
-        self.announcements = not self.announcements
-        os.putenv("ANNOUNCEMENTS", str(self.announcements))
-        await message.author.send("Announcements set to " + str(self.announcements))
+    async def get_announcements(self, message):
+        self.announcements = os.getenv("ANNOUNCEMENTS")
+        await message.author.send("Announcements are " + str(self.announcements))
+        await message.author.send("This can be changed in the Heroku config vars")
 
     async def send_owtank_message(self, message):
         await message.channel.send(random.choice(self.ow_tanks))
