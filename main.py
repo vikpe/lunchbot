@@ -47,9 +47,6 @@ class MyClient(discord.Client):
         self.ow_damage = self.config_data['owDamage']
         self.ow_support = self.config_data['owSupport']
 
-        # read announcement status
-        #self.announcements = self.config_data['announcements']
-
         print(self.config_data)
         print(self.lunch_message)
         print(self.ow_tanks)
@@ -70,7 +67,6 @@ class MyClient(discord.Client):
         print(self.user.name)
         print(self.user.id)
         print('------')
-        #self.last_lunch_message_sent = datetime.datetime(datetime.MINYEAR, 1, 1, 0, 0)
 
     async def on_message(self, message):
         if message.content == '!lunch':
@@ -92,8 +88,8 @@ class MyClient(discord.Client):
 
     async def send_lunch_message(self, message):
         channel = self.get_channel(540608386299985940)
-        if date.today != os.getenv("LAST_ANNOUNCEMENT"):
-            os.putenv("LAST_ANNOUNCEMENT", date.today)
+        if date.today().day != os.getenv("LAST_ANNOUNCEMENT"):
+            os.putenv("LAST_ANNOUNCEMENT", date.today().day)
             if self.announcements:
                   await channel.send(self.lunch_message)
         elif message:
