@@ -50,12 +50,12 @@ class MyClient(discord.Client):
         self.ow_damage = self.config_data['owDamage']
         self.ow_support = self.config_data['owSupport']
 
-        print(self.config_data)
-        print(self.lunch_message)
-        print(self.ow_tanks)
-        print(self.ow_damage)
-        print(self.ow_support)
-        print(self.announcements)
+        # print(self.config_data)
+        # print(self.lunch_message)
+        # print(self.ow_tanks)
+        # print(self.ow_damage)
+        # print(self.ow_support)
+        # print(self.announcements)
 
     async def write_config(self):
         print('Writing config data')
@@ -69,7 +69,7 @@ class MyClient(discord.Client):
         print('Logged in as')
         print(self.user.name)
         print(self.user.id)
-        print('Announcments are ' + str(self.announcements))
+        print('Announcements are ' + str(self.announcements))
         print('------')
 
     async def on_message(self, message):
