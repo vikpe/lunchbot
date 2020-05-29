@@ -27,7 +27,7 @@ class MyClient(discord.Client):
         self.ow_tanks = ""
         self.ow_damage = ""
         self.ow_support = ""
-        self.announcements = ""
+        self.announcements = os.getenv("ANNOUNCEMENTS")
         #self.timezone = tz.gettz("Europe/Stockholm")
         self.datetime = datetime.datetime(datetime.MINYEAR, 1, 1, 0, 0, tzinfo=tz.gettz("Europe/Stockholm"))
 
@@ -48,7 +48,7 @@ class MyClient(discord.Client):
         self.ow_support = self.config_data['owSupport']
 
         # read announcement status
-        self.announcements = self.config_data['announcements']
+        #self.announcements = self.config_data['announcements']
 
         print(self.config_data)
         print(self.lunch_message)
@@ -58,7 +58,7 @@ class MyClient(discord.Client):
         print(self.announcements)
 
     async def write_config(self):
-        self.config_data['announcements'] = self.announcements
+        os.putenv("ANNOUNCEMENTS", self.announcements)
         print('Writing config data')
         print(self.config_data)
         with open('config.json', 'w') as outfile:
