@@ -27,6 +27,7 @@ class MyClient(discord.Client):
         self.ow_tanks = ""
         self.ow_damage = ""
         self.ow_support = ""
+        self.last_announcement = ""
         self.announcements = os.getenv("ANNOUNCEMENTS")
         #self.timezone = tz.gettz("Europe/Stockholm")
         self.datetime = datetime.datetime(datetime.MINYEAR, 1, 1, 0, 0, tzinfo=tz.gettz("Europe/Stockholm"))
@@ -88,8 +89,8 @@ class MyClient(discord.Client):
 
     async def send_lunch_message(self, message):
         channel = self.get_channel(540608386299985940)
-        if date.today().day != os.getenv("LAST_ANNOUNCEMENT"):
-            os.putenv("LAST_ANNOUNCEMENT", date.today().day)
+        if date.today() != self.last_announcement:
+            self.last_announcement = date.today()
             if self.announcements:
                   await channel.send(self.lunch_message)
         elif message:
@@ -98,6 +99,8 @@ class MyClient(discord.Client):
     async def send_test_message(self, message=None):
         await message.author.send(self.lunch_message)
 
+    # Writing of Heroku config vars does not work, this method does not do anything
+    # To change announcements, update config var in browser or cli
     async def set_announcements(self, message):
         self.announcements = not self.announcements
         os.putenv("ANNOUNCEMENTS", str(self.announcements))
