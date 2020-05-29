@@ -3,6 +3,7 @@ import discord
 import asyncio
 import logging
 import datetime
+from datetime import date
 import random
 from dateutil import tz
 import json
@@ -14,7 +15,6 @@ handler = logging.FileHandler(
 handler.setFormatter(logging.Formatter(
     '%(asctime)s:%(levelname)s:%(name)s: %(message)s'))
 logger.addHandler(handler)
-
 
 class MyClient(discord.Client):
 
@@ -58,7 +58,6 @@ class MyClient(discord.Client):
         print(self.announcements)
 
     async def write_config(self):
-        os.putenv("ANNOUNCEMENTS", self.announcements)
         print('Writing config data')
         print(self.config_data)
         with open('config.json', 'w') as outfile:
@@ -71,7 +70,7 @@ class MyClient(discord.Client):
         print(self.user.name)
         print(self.user.id)
         print('------')
-        self.last_lunch_message_sent = datetime.datetime(datetime.MINYEAR, 1, 1, 0, 0)
+        #self.last_lunch_message_sent = datetime.datetime(datetime.MINYEAR, 1, 1, 0, 0)
 
     async def on_message(self, message):
         if message.content == '!lunch':
@@ -91,22 +90,21 @@ class MyClient(discord.Client):
         elif message.content == '!ow':
             await self.send_ow_message(message)
 
-    async def send_lunch_message(self, message=None):
-        time_delta = self.datetime.now() - self.last_lunch_message_sent
-        if time_delta.days > 0 or time_delta.seconds >= 12 * 60 * 60:
-            self.last_lunch_message_sent = self.datetime.now()
-            channel = self.get_channel(540608386299985940)
+    async def send_lunch_message(self, message):
+        channel = self.get_channel(540608386299985940)
+        if date.today != os.getenv("LAST_ANNOUNCEMENT"):
+            os.putenv("LAST_ANNOUNCEMENT", date.today)
             if self.announcements:
-                await channel.send(self.lunch_message)
+                  await channel.send(self.lunch_message)
         elif message:
-            await message.author.send("DOOF! Lunchvote redan uppe.")
+            await channel.send(self.lunch_message)
 
     async def send_test_message(self, message=None):
         await message.author.send(self.lunch_message)
 
     async def set_announcements(self, message):
         self.announcements = not self.announcements
-        await self.write_config()
+        os.putenv("ANNOUNCEMENTS", self.announcements)
         await message.author.send("Announcements set to " + str(self.announcements))
 
     async def send_owtank_message(self, message):
