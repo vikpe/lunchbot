@@ -1,2 +1,3 @@
 discord.py
+pytz.py
 python-dateutil==2.8.0
