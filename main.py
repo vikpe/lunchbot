@@ -2,10 +2,10 @@ import os
 import discord
 import asyncio
 import logging
-import datetime
+from datetime import datetime
+import pytz
 from datetime import date
 import random
-from dateutil import tz
 import json
 
 logger = logging.getLogger('discord')
@@ -29,8 +29,6 @@ class MyClient(discord.Client):
         self.ow_support = ""
         self.last_announcement = ""
         self.announcements = os.getenv("ANNOUNCEMENTS")
-        #self.timezone = tz.gettz("Europe/Stockholm")
-        self.datetime = datetime.datetime(datetime.MINYEAR, 1, 1, 0, 0, tzinfo=tz.gettz("Europe/Stockholm"))
 
         # create the background task and run it
         self.bg_task = self.loop.create_task(self.background_task())
@@ -49,13 +47,6 @@ class MyClient(discord.Client):
         self.ow_tanks = self.config_data['owTanks']
         self.ow_damage = self.config_data['owDamage']
         self.ow_support = self.config_data['owSupport']
-
-        # print(self.config_data)
-        # print(self.lunch_message)
-        # print(self.ow_tanks)
-        # print(self.ow_damage)
-        # print(self.ow_support)
-        # print(self.announcements)
 
     async def write_config(self):
         print('Writing config data')
@@ -105,7 +96,7 @@ class MyClient(discord.Client):
     async def get_announcements(self, message):
         self.announcements = os.getenv("ANNOUNCEMENTS")
         await message.author.send("Announcements are " + str(self.announcements))
-        await message.author.send("This can be changed in the Heroku config vars")
+        await message.author.send("This can be changed in the Heroku Config Vars")
 
     async def send_owtank_message(self, message):
         await message.channel.send(random.choice(self.ow_tanks))
@@ -125,7 +116,10 @@ class MyClient(discord.Client):
 
         while not self.is_closed():
             # check if it's time to send the voting message
-            if self.datetime.now().weekday() < 5 and self.datetime.now().hour == 7:
+            tz_Stockholm = pytz.timezone('Europe/Stockholm')
+            datetime_Stockholm = datetime.now(tz_Stockholm)
+
+            if datetime_Stockholm.weekday() < 5 and datetime_Stockholm.hour == 9:
                 await self.send_lunch_message()
 
             await asyncio.sleep(60)  # task runs every 60 seconds
