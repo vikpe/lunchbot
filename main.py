@@ -107,8 +107,10 @@ class MyClient(discord.Client):
         await message.channel.send(random.choice(all_heroes))
 
     async def background_task(self):
+        print('Entering background_task')
         await self.wait_until_ready()
 
+        print('Checking not self.is_closed')
         while not self.is_closed():
             #check if announcements are enabled
             print('Checking self.announcements')
