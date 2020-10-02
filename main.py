@@ -114,13 +114,12 @@ class MyClient(discord.Client):
             if self.announcements:
                 # check if we already sent a message today
                 if date.today() != self.last_announcement:
-                    self.last_announcement = date.today()
-
                     # check if it's time to send the voting message
                     tz_Stockholm = pytz.timezone('Europe/Stockholm')
                     datetime_Stockholm = datetime.now(tz_Stockholm)
                                          
                     if datetime_Stockholm.weekday() < 5 and datetime_Stockholm.hour == 9:
+                        self.last_announcement = date.today()
                         await self.send_lunch_message()
 
             await asyncio.sleep(60)  # task runs every 60 seconds
