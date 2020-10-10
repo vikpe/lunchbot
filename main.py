@@ -34,13 +34,6 @@ class LunchBot(discord.Client):
         separator = "\n"
         return separator.join(options_as_array_of_strings)
 
-    async def write_config(self):
-        print("Writing config data")
-        print(self.config)
-        with open("config.json", "w") as outfile:
-            json.dump(self.config, outfile)
-        print("Done")
-
     async def on_ready(self):
         print("Logged in as")
         print(self.user.name)
