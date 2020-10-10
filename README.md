@@ -22,7 +22,12 @@ source venv/bin/activate
 python -m pip install -r requirements.txt -r requirements_dev.txt 
 ```
 
+### Run tests
+```bash
+python -m pytest tests.py --cov --disable-warnings
+```
+
 ### Code formatting (black)
 ```bash
-black main.py
+black .
 ```
