@@ -74,15 +74,7 @@ class LunchBot(discord.Client):
             await self.send_test_message(message)
         elif message.content == "!announcements":
             await self.get_announcements(message)
-        elif message.content == "!owtank":
-            await self.send_owtank_message(message)
-        elif message.content == "!owdps":
-            await self.send_owdamage_message(message)
-        elif message.content == "!owheal":
-            await self.send_owsupport_message(message)
-        elif message.content == "!owsupport":
-            await self.send_owsupport_message(message)
-        elif message.content == "!ow":
+        elif message.content.startswith("!ow"):
             await self.send_ow_message(message)
 
     async def send_lunch_message(self):
@@ -99,18 +91,21 @@ class LunchBot(discord.Client):
         )
         await message.author.send("This can be changed in the Heroku Config Vars")
 
-    async def send_owtank_message(self, message):
-        await message.channel.send(random.choice(self.ow_tanks))
-
-    async def send_owdamage_message(self, message):
-        await message.channel.send(random.choice(self.ow_damage))
-
-    async def send_owsupport_message(self, message):
-        await message.channel.send(random.choice(self.ow_support))
-
     async def send_ow_message(self, message):
-        all_heroes = self.ow_tanks + self.ow_damage + self.ow_support
-        await message.channel.send(random.choice(all_heroes))
+        _, char_class = message.content.split["!ow "]  # eg, get "tank" from "!ow tank"
+
+        if char_class in self.ow_char_classes:
+            chars_to_choose_from = self.ow_char_classes[char_class]
+        else:
+            all_chars = [
+                char
+                for char_class in self.ow_char_classes.values()
+                for char in char_class
+            ]
+            chars_to_choose_from = all_chars
+
+        random_char = random.choice(chars_to_choose_from)
+        await message.channel.send(random_char)
 
     async def background_task(self):
         print("Entering background_task")
