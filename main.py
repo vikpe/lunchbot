@@ -73,7 +73,7 @@ class LunchBot(discord.Client):
 
     async def on_message(self, message):
         if message.content == "!lunch":
-            await self.send_lunch_message(message)
+            await self.send_lunch_message()
         elif message.content == "!testlunch":
             await self.send_test_message(message)
         elif message.content == "!announcements":
@@ -89,7 +89,7 @@ class LunchBot(discord.Client):
         elif message.content == "!ow":
             await self.send_ow_message(message)
 
-    async def send_lunch_message(self, message):
+    async def send_lunch_message(self):
         channel = self.get_channel(LunchBotConfig.CHANNEL_ID)
         await channel.send(self.lunch_message)
 
