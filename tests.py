@@ -9,7 +9,6 @@ class LunchBotTestCase(IsolatedAsyncioTestCase):
 
     async def asyncSetUp(self):
         self.bot = LunchBot()
-        await self.bot.load_config()
 
     async def test_send_test_message(self):
         message = MockMessage("!testlunch")
@@ -32,7 +31,7 @@ class LunchBotTestCase(IsolatedAsyncioTestCase):
     async def test_ow_message__any(self):
         all_chars = [
             char
-            for char_class in self.bot.ow_char_classes.values()
+            for char_class in self.bot.config["ow_char_classes"].values()
             for char in char_class
         ]
 
@@ -49,4 +48,6 @@ class LunchBotTestCase(IsolatedAsyncioTestCase):
             await self.bot.on_message(message)
 
             bot_channel_response = message.channel.send.call_args.args[0]
-            self.assertIn(bot_channel_response, self.bot.ow_char_classes["support"])
+            self.assertIn(
+                bot_channel_response, self.bot.config["ow_char_classes"]["support"]
+            )

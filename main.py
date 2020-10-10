@@ -19,9 +19,9 @@ class LunchBot(discord.Client):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        # init stuff
-        self.config: dict = {}
-        self.ow_char_classes: dict = {}
+        with open("config.json") as json_data_file:
+            self.config = json.load(json_data_file)
+
         self.last_announcement_date = ""
         self.announcements_enabled = os.getenv("ANNOUNCEMENTS")
 
@@ -34,13 +34,6 @@ class LunchBot(discord.Client):
         separator = "\n"
         return separator.join(options_as_array_of_strings)
 
-    async def load_config(self):
-        with open("config.json") as json_data_file:
-            self.config = json.load(json_data_file)
-
-        # read overwatch characters
-        self.ow_char_classes = self.config["ow_char_classes"]
-
     async def write_config(self):
         print("Writing config data")
         print(self.config)
@@ -49,7 +42,6 @@ class LunchBot(discord.Client):
         print("Done")
 
     async def on_ready(self):
-        await self.load_config()
         print("Logged in as")
         print(self.user.name)
         print(self.user.id)
@@ -83,14 +75,14 @@ class LunchBot(discord.Client):
 
     async def send_ow_message(self, message):
         # eg get "tank" from "!ow tank"
-        char_class = message.content.strip(f" {self.CMD_OW}")
+        message_char_class = message.content.strip(f" {self.CMD_OW}")
 
-        if char_class in self.ow_char_classes:
-            chars_to_choose_from = self.ow_char_classes[char_class]
+        if message_char_class in self.config["ow_char_classes"].keys():
+            chars_to_choose_from = self.config["ow_char_classes"][message_char_class]
         else:
             all_chars = [
                 char
-                for char_class in self.ow_char_classes.values()
+                for char_class in self.config["ow_char_classes"].values()
                 for char in char_class
             ]
             chars_to_choose_from = all_chars
