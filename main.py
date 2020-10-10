@@ -23,7 +23,6 @@ class LunchBot(discord.Client):
             self.config = json.load(json_data_file)
 
         self.last_announcement_date = ""
-        self.announcements_enabled = os.getenv("ANNOUNCEMENTS")
 
     @property
     def lunch_message(self) -> str:
@@ -33,6 +32,10 @@ class LunchBot(discord.Client):
         ]
         separator = "\n"
         return separator.join(options_formatted)
+
+    @property
+    def announcements_enabled(self):
+        return bool(int(os.getenv("ANNOUNCEMENTS", 0)))
 
     async def on_ready(self):
         print("Logged in as")
