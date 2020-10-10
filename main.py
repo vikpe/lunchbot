@@ -32,9 +32,6 @@ class LunchBot(discord.Client):
         self.last_announcement_date = ""
         self.announcements_enabled = os.getenv("ANNOUNCEMENTS")
 
-        # create the background task and run it
-        self.loop.create_task(self.lunch_task())
-
     async def load_config(self):
         with open("config.json") as json_data_file:
             self.config = json.load(json_data_file)
@@ -61,6 +58,7 @@ class LunchBot(discord.Client):
         print(self.user.id)
         print("Announcements are " + str(self.announcements_enabled))
         print("------")
+        self.loop.create_task(self.lunch_task())
 
     async def on_message(self, message):
         if message.content == self.CMD_LUNCH:
