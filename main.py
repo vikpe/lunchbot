@@ -63,7 +63,6 @@ class LunchBot(discord.Client):
         await message.author.send(self.lunch_message)
 
     async def send_announcements(self, message):
-        self.announcements_enabled = os.getenv("ANNOUNCEMENTS")
         await message.author.send(
             "Announcements are " + str(self.announcements_enabled)
         )
@@ -99,7 +98,7 @@ class LunchBot(discord.Client):
 
         # working day?
         timezone = pytz.timezone(self.config["timezone"])
-        current_datetime = datetime.now(timezone)
+        current_datetime = datetime.now(tz=timezone)
 
         is_workingday = current_datetime.weekday() < 5
 
@@ -107,8 +106,8 @@ class LunchBot(discord.Client):
             return False
 
         # time for announcement?
-        is_time_for_announcement = (
-            current_datetime.hour == self.config["lunch_announcement_hour"]
+        is_time_for_announcement = current_datetime.hour == int(
+            self.config["lunch_announcement_hour"]
         )
 
         return is_time_for_announcement
