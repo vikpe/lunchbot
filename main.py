@@ -16,17 +16,12 @@ class LunchBotConfig:
     CHANNEL_ID = 540608386299985940  # Highly Unprofessional / lunch
 
 
-def setup_logging():
-    logger = logging.getLogger("discord")
-    logger.setLevel(logging.WARNING)
-    handler = logging.FileHandler(filename="discord.log", encoding="utf-8", mode="w")
-    handler.setFormatter(
-        logging.Formatter("%(asctime)s:%(levelname)s:%(name)s: %(message)s")
-    )
-    logger.addHandler(handler)
-
-
 class LunchBot(discord.Client):
+    CMD_OW = "!ow"
+    CMD_LUNCH = "!lunch"
+    CMD_TEST_LUNCH = "!testlunch"
+    CMD_ANNOUNCEMENTS = "!announcements"
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -38,7 +33,7 @@ class LunchBot(discord.Client):
         self.announcements_enabled = os.getenv("ANNOUNCEMENTS")
 
         # create the background task and run it
-        self.bg_task = self.loop.create_task(self.background_task())
+        self.loop.create_task(self.lunch_task())
 
     async def load_config(self):
         with open("config.json") as json_data_file:
@@ -68,13 +63,13 @@ class LunchBot(discord.Client):
         print("------")
 
     async def on_message(self, message):
-        if message.content == "!lunch":
+        if message.content == self.CMD_LUNCH:
             await self.send_lunch_message()
-        elif message.content == "!testlunch":
+        elif message.content == self.CMD_TEST_LUNCH:
             await self.send_test_message(message)
-        elif message.content == "!announcements":
+        elif message.content == self.CMD_ANNOUNCEMENTS:
             await self.get_announcements(message)
-        elif message.content.startswith("!ow"):
+        elif message.content.startswith(self.CMD_OW):
             await self.send_ow_message(message)
 
     async def send_lunch_message(self):
@@ -92,7 +87,8 @@ class LunchBot(discord.Client):
         await message.author.send("This can be changed in the Heroku Config Vars")
 
     async def send_ow_message(self, message):
-        _, char_class = message.content.split["!ow "]  # eg, get "tank" from "!ow tank"
+        # eg get "tank" from "!ow tank"
+        char_class = message.content.strip(f" {self.CMD_OW}")
 
         if char_class in self.ow_char_classes:
             chars_to_choose_from = self.ow_char_classes[char_class]
@@ -107,7 +103,7 @@ class LunchBot(discord.Client):
         random_char = random.choice(chars_to_choose_from)
         await message.channel.send(random_char)
 
-    async def background_task(self):
+    async def lunch_task(self):
         print("Entering background_task")
         await self.wait_until_ready()
 
@@ -142,6 +138,16 @@ class LunchBot(discord.Client):
 
             print("Sleep for 60 seconds")
             await asyncio.sleep(60)  # task runs every 60 seconds
+
+
+def setup_logging():
+    logger = logging.getLogger("discord")
+    logger.setLevel(logging.WARNING)
+    handler = logging.FileHandler(filename="discord.log", encoding="utf-8", mode="w")
+    handler.setFormatter(
+        logging.Formatter("%(asctime)s:%(levelname)s:%(name)s: %(message)s")
+    )
+    logger.addHandler(handler)
 
 
 if __name__ == "__main__":
