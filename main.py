@@ -68,7 +68,7 @@ class LunchBot(discord.Client):
         elif message.content == self.CMD_TEST_LUNCH:
             await self.send_test_message(message)
         elif message.content == self.CMD_ANNOUNCEMENTS:
-            await self.get_announcements(message)
+            await self.send_announcements(message)
         elif message.content.startswith(self.CMD_OW):
             await self.send_ow_message(message)
 
@@ -79,7 +79,7 @@ class LunchBot(discord.Client):
     async def send_test_message(self, message=None):
         await message.author.send(self.lunch_message)
 
-    async def get_announcements(self, message):
+    async def send_announcements(self, message):
         self.announcements_enabled = os.getenv("ANNOUNCEMENTS")
         await message.author.send(
             "Announcements are " + str(self.announcements_enabled)

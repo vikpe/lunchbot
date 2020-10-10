@@ -1,6 +1,6 @@
 from main import LunchBot
 
-from unittest import IsolatedAsyncioTestCase
+from unittest import IsolatedAsyncioTestCase, mock
 from test_helpers import MockMessage
 
 
@@ -16,6 +16,18 @@ class LunchBotTestCase(IsolatedAsyncioTestCase):
         await self.bot.on_message(message)
 
         message.author.send.assert_called_once_with(self.bot.lunch_message)
+
+    async def test_send_announcements(self):
+        message = MockMessage("!announcements")
+        await self.bot.on_message(message)
+
+        self.assertEqual(message.author.send.call_count, 2)
+        message.author.send.assert_has_calls(
+            [
+                mock.call("Announcements are None"),
+                mock.call("This can be changed in the Heroku Config Vars"),
+            ]
+        )
 
     async def test_ow_message__any(self):
         all_chars = [
