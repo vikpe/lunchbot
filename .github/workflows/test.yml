@@ -18,7 +18,7 @@ jobs:
         uses: actions/cache@v1
         with:
           path: ~/.cache/pip
-          key: ${{ matrix.os }}-pip-${{ hashFiles('pyproject.toml') }}
+          key: ${{ matrix.os }}-pip-${{ hashFiles('requirements.txt', 'requirements_dev.txt') }}
           restore-keys: |
             ${{ matrix.os }}-pip-
       - name: Install dependencies
