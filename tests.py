@@ -33,7 +33,7 @@ class LunchBotTestCase(IsolatedAsyncioTestCase):
         self.assertEqual(message.author.send.call_count, 2)
         message.author.send.assert_has_calls(
             [
-                mock.call("Announcements are None"),
+                mock.call("Announcements are False"),
                 mock.call("This can be changed in the Heroku Config Vars"),
             ]
         )
