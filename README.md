@@ -5,19 +5,19 @@
 
 ### Setup
 
-**Clone repo**
+**1. Clone repo**
 ```bash
 git clone https://github.com/stedo880/lunchbot.git
 cd lunchbot
 ```
 
-**Create and activate virtual environment**
+**2. Create and activate virtual environment**
 ```bash
 python3 -m venv venv
 source venv/bin/activate
 ```
 
-**Install dependencies**
+**3. Install dependencies**
 ```bash
 python -m pip install -r requirements.txt -r requirements_dev.txt 
 ```
