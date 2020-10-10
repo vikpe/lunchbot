@@ -1,7 +1,7 @@
 from main import LunchBot
 
 from unittest import IsolatedAsyncioTestCase, mock
-from test_helpers import MockMessage
+from test_helpers import MockMessage, MockChannel
 
 
 class LunchBotTestCase(IsolatedAsyncioTestCase):
@@ -15,6 +15,16 @@ class LunchBotTestCase(IsolatedAsyncioTestCase):
         await self.bot.on_message(message)
 
         message.author.send.assert_called_once_with(self.bot.lunch_message)
+
+    @mock.patch("main.LunchBot.get_channel")
+    async def test_send_lunch_message(self, mock_get_channel):
+        mock_lunch_channel = MockChannel()
+        mock_get_channel.return_value = mock_lunch_channel
+
+        message = MockMessage("!lunch")
+        await self.bot.on_message(message)
+
+        mock_lunch_channel.send.assert_called_once_with(self.bot.lunch_message)
 
     async def test_send_announcements(self):
         message = MockMessage("!announcements")
