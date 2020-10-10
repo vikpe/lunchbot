@@ -31,30 +31,26 @@ class LunchBot(discord.Client):
         super().__init__(*args, **kwargs)
 
         # init stuff
-        self.lunch_message = ""
-        self.config = ""
-        self.ow_tanks = ""
-        self.ow_damage = ""
-        self.ow_support = ""
+        self.lunch_message: str = ""
+        self.config: dict = {}
+        self.ow_char_classes: dict = {}
         self.last_announcement_date = ""
         self.announcements_enabled = os.getenv("ANNOUNCEMENTS")
 
         # create the background task and run it
         self.bg_task = self.loop.create_task(self.background_task())
 
-    async def read_config(self):
-        self.lunch_message = ""
+    async def load_config(self):
         with open("config.json") as json_data_file:
             self.config = json.load(json_data_file)
 
         # read lunch options
-        for option in self.config["options"]:
-            self.lunch_message += option["emoji"] + " " + option["votingOption"] + "\n"
+        self.lunch_message = ""
+        for option in self.config["lunch_options"]:
+            self.lunch_message += option["emoji"] + " " + option["label"] + "\n"
 
-        # read ow characters
-        self.ow_tanks = self.config["owTanks"]
-        self.ow_damage = self.config["owDamage"]
-        self.ow_support = self.config["owSupport"]
+        # read overwatch characters
+        self.ow_char_classes = self.config["ow_char_classes"]
 
     async def write_config(self):
         print("Writing config data")
@@ -64,7 +60,7 @@ class LunchBot(discord.Client):
         print("Done")
 
     async def on_ready(self):
-        await self.read_config()
+        await self.load_config()
         print("Logged in as")
         print(self.user.name)
         print(self.user.id)
