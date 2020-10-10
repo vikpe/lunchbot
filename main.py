@@ -18,7 +18,7 @@ handler.setFormatter(
 logger.addHandler(handler)
 
 
-class MyClient(discord.Client):
+class LunchBot(discord.Client):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -123,8 +123,9 @@ class MyClient(discord.Client):
                     datetime_stockholm = datetime.now(tz_stockholm)
 
                     print("Checking weekday and hour")
+                    is_workday = datetime_stockholm.weekday() < 5
                     if (
-                        datetime_stockholm.weekday() < 5
+                        is_workday
                         and datetime_stockholm.hour == 9
                     ):
                         print("Setting self.last_annoucement")
@@ -136,7 +137,7 @@ class MyClient(discord.Client):
             await asyncio.sleep(60)  # task runs every 60 seconds
 
 
-client = MyClient()
+client = LunchBot()
 api_token = os.getenv("LUNCHBOT_TOKEN")
 
 client.run(api_token)
