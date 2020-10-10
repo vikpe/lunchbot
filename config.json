@@ -1,64 +1,103 @@
 {
-  "options": [
+  "timezone": "Europe/Stockholm",
+  "lunch_announcement_hour": 9,
+  "lunch_channel_id": "540608386299985940",
+  "lunch_options": [
     {
       "emoji": ":white_check_mark:",
-      "votingOption": "Ja"
+      "label": "Ja"
     },
     {
       "emoji": ":no_entry:",
-      "votingOption": "Nej"
+      "label": "Nej"
     },
     {
       "emoji": "<:mk:541268624392978442>",
-      "votingOption": "Matkultur"
+      "label": "Matkultur"
     },
     {
       "emoji": ":hot_pepper:",
-      "votingOption": "Chili & Lime"
+      "label": "Chili & Lime"
     },
     {
       "emoji": ":pizza:",
-      "votingOption": "La Fontana"
+      "label": "La Fontana"
     },
     {
       "emoji": ":house:",
-      "votingOption": "Husman"
+      "label": "Husman"
     },
     {
       "emoji": ":sushi:",
-      "votingOption": "Yatai"
+      "label": "Yatai"
     },
     {
       "emoji": ":green_salad:",
-      "votingOption": "Brödernas"
+      "label": "Brödernas"
     },
     {
       "emoji": ":golf:",
-      "votingOption": "Golfen"
+      "label": "Golfen"
     },
     {
       "emoji": ":office:",
-      "votingOption": "Collegium"
+      "label": "Collegium"
     },
     {
       "emoji": ":u5272:",
-      "votingOption": "Ming"
+      "label": "Ming"
     },
     {
       "emoji": ":cityscape:",
-      "votingOption": "LPS"
+      "label": "LPS"
     },
     {
       "emoji": ":new:",
-      "votingOption": "Annat, kommentera!"
+      "label": "Annat, kommentera!"
     },
     {
       "emoji": ":books:",
-      "votingOption": "Jag kan boka"
+      "label": "Jag kan boka"
     }
   ],
-  "owTanks": [ "D.Va", "Orisa", "Reinhardt", "Roadhog", "Sigma", "Winston", "Wrecking Ball", "Zarya" ],
-  "owDamage": [ "Ashe", "Bastion", "Doomfist", "Echo", "Genji", "Hanzo", "Junkrat", "McCree", "Mei", "Pharah", "Reaper", "Soldier: 76", "Sombra", "Symmetra", "Torbjörn", "Tracer", "Widowmaker" ],
-  "owSupport": [ "Ana", "Baptiste", "Brigitte", "Lúcio", "Mercy", "Moira", "Zenyatta" ],
-  "announcements": true
+  "ow_char_classes": {
+    "tanks": [
+      "D.Va",
+      "Orisa",
+      "Reinhardt",
+      "Roadhog",
+      "Sigma",
+      "Winston",
+      "Wrecking Ball",
+      "Zarya"
+    ],
+    "damage": [
+      "Ashe",
+      "Bastion",
+      "Doomfist",
+      "Echo",
+      "Genji",
+      "Hanzo",
+      "Junkrat",
+      "McCree",
+      "Mei",
+      "Pharah",
+      "Reaper",
+      "Soldier: 76",
+      "Sombra",
+      "Symmetra",
+      "Torbjörn",
+      "Tracer",
+      "Widowmaker"
+    ],
+    "support": [
+      "Ana",
+      "Baptiste",
+      "Brigitte",
+      "Lúcio",
+      "Mercy",
+      "Moira",
+      "Zenyatta"
+    ]
+  }
 }

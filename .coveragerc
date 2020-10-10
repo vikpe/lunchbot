@@ -1,0 +1,5 @@
+[run]
+omit =
+    venv/*
+    tests.py
+    test_helpers.py

@@ -1,138 +1,144 @@
-import os
-import discord
 import asyncio
-import logging
-from datetime import datetime
-import pytz
-from datetime import date
-import random
 import json
+import logging
+import os
+import random
+from datetime import date
+from datetime import datetime
 
-logger = logging.getLogger('discord')
-logger.setLevel(logging.WARNING)
-handler = logging.FileHandler(
-    filename='discord.log', encoding='utf-8', mode='w')
-handler.setFormatter(logging.Formatter(
-    '%(asctime)s:%(levelname)s:%(name)s: %(message)s'))
-logger.addHandler(handler)
+import discord
+import pytz
 
-class MyClient(discord.Client):
+
+class LunchBot(discord.Client):
+    CMD_OW = "!ow"
+    CMD_LUNCH = "!lunch"
+    CMD_TEST_LUNCH = "!testlunch"
+    CMD_ANNOUNCEMENTS = "!announcements"
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        # init stuff
-        self.lunch_message = ""
-        self.config_data = ""
-        self.ow_tanks = ""
-        self.ow_damage = ""
-        self.ow_support = ""
-        self.last_announcement = ""
-        self.announcements = os.getenv("ANNOUNCEMENTS")
+        with open("config.json") as json_data_file:
+            self.config = json.load(json_data_file)
 
-        # create the background task and run it
-        self.bg_task = self.loop.create_task(self.background_task())
+        self.last_announcement_date = ""
 
-    async def read_config(self):
-        self.lunch_message = ""
-        with open('config.json') as json_data_file:
-            self.config_data = json.load(json_data_file)
+    @property
+    def lunch_message(self) -> str:
+        options_formatted = [
+            option["emoji"] + " " + option["label"]
+            for option in self.config["lunch_options"]
+        ]
+        separator = "\n"
+        return separator.join(options_formatted)
 
-        # read lunch options
-        for option in self.config_data["options"]:
-            self.lunch_message += option["emoji"] + \
-                " " + option["votingOption"] + "\n"
-
-        # read ow characters
-        self.ow_tanks = self.config_data['owTanks']
-        self.ow_damage = self.config_data['owDamage']
-        self.ow_support = self.config_data['owSupport']
-
-    async def write_config(self):
-        print('Writing config data')
-        print(self.config_data)
-        with open('config.json', 'w') as outfile:
-            json.dump(self.config_data, outfile)
-        print('Done')
+    @property
+    def announcements_enabled(self):
+        return bool(int(os.getenv("ANNOUNCEMENTS", 0)))
 
     async def on_ready(self):
-        await self.read_config()
-        print('Logged in as')
+        print("Logged in as")
         print(self.user.name)
         print(self.user.id)
-        print('Announcements are ' + str(self.announcements))
-        print('------')
+        print("Announcements are " + str(self.announcements_enabled))
+        print("------")
+        self.loop.create_task(self.lunch_task())
 
     async def on_message(self, message):
-        if message.content == '!lunch':
-            await self.send_lunch_message(message)
-        elif message.content == '!testlunch':
+        if message.content == self.CMD_LUNCH:
+            await self.send_lunch_message()
+        elif message.content == self.CMD_TEST_LUNCH:
             await self.send_test_message(message)
-        elif message.content == '!announcements':
-            await self.get_announcements(message)
-        elif message.content == '!owtank':
-            await self.send_owtank_message(message)
-        elif message.content == '!owdps':
-            await self.send_owdamage_message(message)
-        elif message.content == '!owheal':
-            await self.send_owsupport_message(message)
-        elif message.content == '!owsupport':
-            await self.send_owsupport_message(message)
-        elif message.content == '!ow':
+        elif message.content == self.CMD_ANNOUNCEMENTS:
+            await self.send_announcements(message)
+        elif message.content.startswith(self.CMD_OW):
             await self.send_ow_message(message)
 
-    async def send_lunch_message(self, message):
-        channel = self.get_channel(540608386299985940)
+    async def send_lunch_message(self):
+        channel = self.get_channel(self.config["lunch_channel_id"])
         await channel.send(self.lunch_message)
 
     async def send_test_message(self, message=None):
         await message.author.send(self.lunch_message)
 
-    async def get_announcements(self, message):
-        self.announcements = os.getenv("ANNOUNCEMENTS")
-        await message.author.send("Announcements are " + str(self.announcements))
+    async def send_announcements(self, message):
+        await message.author.send(
+            "Announcements are " + str(self.announcements_enabled)
+        )
         await message.author.send("This can be changed in the Heroku Config Vars")
 
-    async def send_owtank_message(self, message):
-        await message.channel.send(random.choice(self.ow_tanks))
-   
-    async def send_owdamage_message(self, message):
-        await message.channel.send(random.choice(self.ow_damage))
-   
-    async def send_owsupport_message(self, message):
-        await message.channel.send(random.choice(self.ow_support))
-
     async def send_ow_message(self, message):
-        all_heroes = self.ow_tanks + self.ow_damage + self.ow_support
-        await message.channel.send(random.choice(all_heroes))
+        # eg get "tank" from "!ow tank"
+        message_char_class = message.content.strip(f"{self.CMD_OW} ")
 
-    async def background_task(self):
-        print('Entering background_task')
+        if message_char_class in self.config["ow_char_classes"].keys():
+            chars_to_choose_from = self.config["ow_char_classes"][message_char_class]
+        else:
+            all_chars = [
+                char
+                for char_class in self.config["ow_char_classes"].values()
+                for char in char_class
+            ]
+            chars_to_choose_from = all_chars
+
+        random_char = random.choice(chars_to_choose_from)
+        await message.channel.send(random_char)
+
+    async def should_send_lunch_message(self):
+        # announcement enabled?
+        if not self.announcements_enabled:
+            return False
+
+        # already announced?
+        has_announced_today = date.today() == self.last_announcement_date
+
+        if has_announced_today:
+            return False
+
+        # working day?
+        timezone = pytz.timezone(self.config["timezone"])
+        current_datetime = datetime.now(tz=timezone)
+
+        is_workingday = current_datetime.weekday() < 5
+
+        if not is_workingday:
+            return False
+
+        # time for announcement?
+        is_time_for_announcement = current_datetime.hour == int(
+            self.config["lunch_announcement_hour"]
+        )
+
+        return is_time_for_announcement
+
+    async def lunch_task(self):
+        print("Entering background_task")
         await self.wait_until_ready()
 
-        print('Checking not self.is_closed')
+        print("Checking not self.is_closed")
         while not self.is_closed():
-            #check if announcements are enabled
-            print('Checking self.announcements')
-            if self.announcements:
-                # check if we already sent a message today
-                print('Checking self.last_announcement')
-                if date.today() != self.last_announcement:
-                    # check if it's time to send the voting message
-                    tz_Stockholm = pytz.timezone('Europe/Stockholm')
-                    datetime_Stockholm = datetime.now(tz_Stockholm)
-                                         
-                    print('Checking weekday and hour')
-                    if datetime_Stockholm.weekday() < 5 and datetime_Stockholm.hour == 9:
-                        print('Setting self.last_annoucement')
-                        self.last_announcement = date.today()
-                        print('Sending lunch message')
-                        await self.send_lunch_message()
+            if await self.should_send_lunch_message():
+                await self.send_lunch_message()
+                self.last_announcement_date = date.today()
 
-            print('Sleep for 60 seconds')
+            print("Sleep for 60 seconds")
             await asyncio.sleep(60)  # task runs every 60 seconds
 
-client = MyClient()
-api_token = os.getenv("LUNCHBOT_TOKEN")
 
-client.run(api_token)
+def setup_logging():
+    logger = logging.getLogger("discord")
+    logger.setLevel(logging.WARNING)
+    handler = logging.FileHandler(filename="discord.log", encoding="utf-8", mode="w")
+    handler.setFormatter(
+        logging.Formatter("%(asctime)s:%(levelname)s:%(name)s: %(message)s")
+    )
+    logger.addHandler(handler)
+
+
+if __name__ == "__main__":
+    setup_logging()
+
+    bot = LunchBot()
+    api_token = os.getenv("LUNCHBOT_TOKEN")
+    bot.run(api_token)
