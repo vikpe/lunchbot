@@ -10,12 +10,6 @@ import discord
 import pytz
 
 
-class LunchBotConfig:
-    TIMEZONE = "Europe/Stockholm"
-    ANNOUNCEMENT_HOUR = 9
-    CHANNEL_ID = 540608386299985940  # Highly Unprofessional / lunch
-
-
 class LunchBot(discord.Client):
     CMD_OW = "!ow"
     CMD_LUNCH = "!lunch"
@@ -71,7 +65,7 @@ class LunchBot(discord.Client):
             await self.send_ow_message(message)
 
     async def send_lunch_message(self):
-        channel = self.get_channel(LunchBotConfig.CHANNEL_ID)
+        channel = self.get_channel(self.config["lunch_channel_id"])
         await channel.send(self.lunch_message)
 
     async def send_test_message(self, message=None):
@@ -117,14 +111,13 @@ class LunchBot(discord.Client):
 
                 if not has_announced_today:
                     # check if it's time to send the voting message
-                    current_datetime = datetime.now(
-                        pytz.timezone(LunchBotConfig.TIMEZONE)
-                    )
+                    timezone = pytz.timezone(self.config["timezone"])
+                    current_datetime = datetime.now(timezone)
 
                     print("Checking weekday and hour")
                     is_workingday = current_datetime.weekday() < 5
                     is_time_for_announcement = (
-                        current_datetime.hour == LunchBotConfig.ANNOUNCEMENT_HOUR
+                        current_datetime.hour == self.config["lunch_announcement_hour"]
                     )
 
                     if is_workingday and is_time_for_announcement:

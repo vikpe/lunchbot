@@ -1,4 +1,7 @@
 {
+  "timezone": "Europe/Stockholm",
+  "lunch_announcement_hour": 9,
+  "lunch_channel_id": "540608386299985940",
   "lunch_options": [
     {
       "emoji": ":white_check_mark:",
