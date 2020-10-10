@@ -56,7 +56,7 @@ class LunchBot(discord.Client):
             await self.send_ow_message(message)
 
     async def send_lunch_message(self):
-        channel = self.get_channel(self.config["lunch_channel_id"])
+        channel = self.get_channel(int(self.config["lunch_channel_id"]))
         await channel.send(self.lunch_message)
 
     async def send_test_message(self, message=None):
