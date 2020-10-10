@@ -121,6 +121,7 @@ class LunchBot(discord.Client):
         while not self.is_closed():
             if await self.should_send_lunch_message():
                 await self.send_lunch_message()
+                self.last_announcement_date = date.today()
 
             print("Sleep for 60 seconds")
             await asyncio.sleep(60)  # task runs every 60 seconds
