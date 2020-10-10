@@ -119,17 +119,18 @@ class LunchBot(discord.Client):
                 # check if we already sent a message today
                 print("Checking self.last_announcement_date")
                 todays_date = date.today()
+                has_announced_today = todays_date == self.last_announcement_date
 
-                if todays_date != self.last_announcement_date:
+                if not has_announced_today:
                     # check if it's time to send the voting message
-                    datetime_stockholm = datetime.now(
+                    current_datetime = datetime.now(
                         pytz.timezone(LunchBotConfig.TIMEZONE)
                     )
 
                     print("Checking weekday and hour")
-                    is_workingday = datetime_stockholm.weekday() < 5
+                    is_workingday = current_datetime.weekday() < 5
                     is_time_for_announcement = (
-                        datetime_stockholm.hour == LunchBotConfig.ANNOUNCEMENT_HOUR
+                        current_datetime.hour == LunchBotConfig.ANNOUNCEMENT_HOUR
                     )
 
                     if is_workingday and is_time_for_announcement:
