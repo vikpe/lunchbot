@@ -1,4 +1,4 @@
-# lunchbot
+# lunchbot ![test](https://github.com/vikpe/lunchbot/workflows/test/badge.svg?branch=master)
 > A Discord bot for coordinating lunches
 
 ## Development
