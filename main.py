@@ -27,12 +27,12 @@ class LunchBot(discord.Client):
 
     @property
     def lunch_message(self) -> str:
-        options_as_array_of_strings = [
+        options_formatted = [
             option["emoji"] + " " + option["label"]
             for option in self.config["lunch_options"]
         ]
         separator = "\n"
-        return separator.join(options_as_array_of_strings)
+        return separator.join(options_formatted)
 
     async def on_ready(self):
         print("Logged in as")
@@ -68,7 +68,7 @@ class LunchBot(discord.Client):
 
     async def send_ow_message(self, message):
         # eg get "tank" from "!ow tank"
-        message_char_class = message.content.strip(f" {self.CMD_OW}")
+        message_char_class = message.content.strip(f"{self.CMD_OW} ")
 
         if message_char_class in self.config["ow_char_classes"].keys():
             chars_to_choose_from = self.config["ow_char_classes"][message_char_class]
