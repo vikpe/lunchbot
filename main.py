@@ -83,37 +83,41 @@ class LunchBot(discord.Client):
         random_char = random.choice(chars_to_choose_from)
         await message.channel.send(random_char)
 
+    async def should_send_lunch_message(self):
+        # announcement enabled?
+        if not self.announcements_enabled:
+            return False
+
+        # already announced?
+        has_announced_today = date.today() == self.last_announcement_date
+
+        if has_announced_today:
+            return False
+
+        # working day?
+        timezone = pytz.timezone(self.config["timezone"])
+        current_datetime = datetime.now(timezone)
+
+        is_workingday = current_datetime.weekday() < 5
+
+        if not is_workingday:
+            return False
+
+        # time for announcement?
+        is_time_for_announcement = (
+            current_datetime.hour == self.config["lunch_announcement_hour"]
+        )
+
+        return is_time_for_announcement
+
     async def lunch_task(self):
         print("Entering background_task")
         await self.wait_until_ready()
 
         print("Checking not self.is_closed")
         while not self.is_closed():
-            # check if announcements are enabled
-            print("Checking self.announcements")
-            if self.announcements_enabled:
-                # check if we already sent a message today
-                print("Checking self.last_announcement_date")
-                todays_date = date.today()
-                has_announced_today = todays_date == self.last_announcement_date
-
-                if not has_announced_today:
-                    # check if it's time to send the voting message
-                    timezone = pytz.timezone(self.config["timezone"])
-                    current_datetime = datetime.now(timezone)
-
-                    print("Checking weekday and hour")
-                    is_workingday = current_datetime.weekday() < 5
-                    is_time_for_announcement = (
-                        current_datetime.hour == self.config["lunch_announcement_hour"]
-                    )
-
-                    if is_workingday and is_time_for_announcement:
-                        print("Setting self.last_annoucement")
-                        self.last_announcement_date = todays_date
-
-                        print("Sending lunch message")
-                        await self.send_lunch_message()
+            if await self.should_send_lunch_message():
+                await self.send_lunch_message()
 
             print("Sleep for 60 seconds")
             await asyncio.sleep(60)  # task runs every 60 seconds
