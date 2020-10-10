@@ -1,6 +1,8 @@
-from main import LunchBot
-
 from unittest import IsolatedAsyncioTestCase, mock
+
+from freezegun import freeze_time
+
+from main import LunchBot
 from test_helpers import MockMessage, MockChannel
 
 
@@ -61,3 +63,35 @@ class LunchBotTestCase(IsolatedAsyncioTestCase):
             self.assertIn(
                 bot_channel_response, self.bot.config["ow_char_classes"]["support"]
             )
+
+    async def test_should_send_lunch_message(self):
+        from datetime import datetime, timedelta, date
+        import os
+
+        # annonucements disabled
+        os.environ["ANNOUNCEMENTS"] = "0"
+        self.assertFalse(await self.bot.should_send_lunch_message())
+
+        # annonucements enabled
+        os.environ["ANNOUNCEMENTS"] = "1"
+
+        # already annonuced today
+        self.bot.last_announcement_date = date.today()
+        self.assertFalse(await self.bot.should_send_lunch_message())
+
+        # set annonucement date to yesterday
+        yesterdays_date = (datetime.now() - timedelta(1)).date()
+        self.bot.last_announcement_date = yesterdays_date
+
+        # not a working day
+        with freeze_time("2020-01-04"):
+            self.assertFalse(await self.bot.should_send_lunch_message())
+
+        # working day
+        with freeze_time("2020-01-03 08:00", tz_offset=-1) as frozen_time:
+            # not time for announcement
+            self.assertFalse(await self.bot.should_send_lunch_message())
+
+            # finally, time for announcement!
+            frozen_time.tick(3600)
+            self.assertTrue(await self.bot.should_send_lunch_message())
